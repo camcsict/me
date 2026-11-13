@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>LingoTube - Hệ Thống Học Qua YouTube (Phân Quyền Admin & Học Viên)</title>
+  <title>LingoTube - Học Qua YouTube (Lưới Video & Cảnh Báo Trùng Lặp)</title>
   <style>
     :root {
       --duo-green: #58CC02;
@@ -14,7 +14,9 @@
       --duo-blue: #1CB0F6;
       --duo-blue-dark: #1899D6;
       --duo-red: #FF4B4B;
-      --bg: #F7FAF5;
+      --duo-red-dark: #D33131;
+      --duo-purple: #CE82FF;
+      --bg: #F4F9F0;
       --card: #FFFFFF;
       --text: #3C3C3C;
       --muted: #777777;
@@ -25,19 +27,21 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background: var(--bg);
       color: var(--text);
-      padding-bottom: 84px;
+      padding-bottom: 90px;
     }
+
+    /* HEADER */
     header {
       position: sticky; top: 0; z-index: 50;
       background: var(--card);
       border-bottom: 2px solid var(--border);
-      padding: 10px 14px;
+      padding: 10px 16px;
       display: flex; align-items: center; justify-content: space-between; gap: 8px;
       flex-wrap: wrap;
     }
-    .brand { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 1.15rem; color: var(--duo-green); }
+    .brand { display: flex; align-items: center; gap: 8px; font-weight: 900; font-size: 1.2rem; color: var(--duo-green); }
     .role-badge {
-      font-size: 0.72rem; font-weight: 800; padding: 3px 8px; border-radius: 99px;
+      font-size: 0.72rem; font-weight: 800; padding: 3px 9px; border-radius: 99px;
       background: #E0F2FE; color: #0369A1;
     }
     .role-badge.admin {
@@ -46,7 +50,7 @@
     .top-controls { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
     .btn-3d {
       border: none; cursor: pointer; font-weight: 800; border-radius: 12px;
-      padding: 8px 12px; font-size: 0.85rem; transition: transform 0.08s;
+      padding: 8px 12px; font-size: 0.84rem; transition: transform 0.08s, filter 0.12s;
       display: inline-flex; align-items: center; justify-content: center; gap: 5px;
       text-decoration: none;
     }
@@ -54,32 +58,59 @@
     .btn-green { background: var(--duo-green); color: #fff; box-shadow: 0 4px 0 var(--duo-green-dark); }
     .btn-orange { background: var(--duo-orange); color: #fff; box-shadow: 0 4px 0 var(--duo-orange-dark); }
     .btn-blue { background: var(--duo-blue); color: #fff; box-shadow: 0 4px 0 var(--duo-blue-dark); }
+    .btn-red { background: var(--duo-red); color: #fff; box-shadow: 0 4px 0 var(--duo-red-dark); }
     .btn-outline { background: #fff; color: var(--text); border: 2px solid var(--border); box-shadow: 0 3px 0 var(--border); }
     .btn-outline.active { border-color: var(--duo-green); background: var(--duo-green-light); color: var(--duo-green-dark); box-shadow: 0 3px 0 var(--duo-green); }
 
-    .container { max-width: 480px; margin: 0 auto; padding: 14px; }
-    .container.wide { max-width: 980px; }
+    /* CONTAINER */
+    .container { max-width: 960px; margin: 0 auto; padding: 14px; }
+    .container.compact { max-width: 520px; }
 
+    /* STREAK HERO CARD */
     .streak-hero {
-      background: linear-gradient(135deg, #FF9600 0%, #FF6B00 100%);
-      color: #fff; border-radius: 20px; padding: 18px;
-      box-shadow: 0 6px 0 #CC5500; margin-bottom: 16px;
+      background: linear-gradient(135deg, #FF9600 0%, #FF6200 100%);
+      color: #fff; border-radius: 22px; padding: 18px;
+      box-shadow: 0 6px 0 #CC5200; margin-bottom: 16px;
     }
-    .streak-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .streak-big { font-size: 2.4rem; font-weight: 900; line-height: 1; }
-    .streak-sub { font-size: 0.9rem; opacity: 0.95; font-weight: 700; margin-top: 4px; }
-    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+    .streak-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 8px; flex-wrap: wrap; }
+    .streak-big { font-size: 2.3rem; font-weight: 900; line-height: 1; }
+    .streak-sub { font-size: 0.88rem; opacity: 0.95; font-weight: 700; margin-top: 4px; }
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px; }
+    @media (max-width: 520px) {
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+    }
     .stat-pill {
-      background: rgba(255,255,255,0.2); border-radius: 12px; padding: 8px; text-align: center;
+      background: rgba(255,255,255,0.22); border-radius: 14px; padding: 9px 6px; text-align: center;
     }
     .stat-pill .val { font-size: 1.15rem; font-weight: 900; }
-    .stat-pill .lbl { font-size: 0.72rem; opacity: 0.9; }
+    .stat-pill .lbl { font-size: 0.72rem; opacity: 0.95; }
     .dots-bar { display: flex; gap: 6px; margin-top: 12px; align-items: center; }
     .dot {
       flex: 1; height: 10px; border-radius: 99px; background: rgba(255,255,255,0.3);
     }
     .dot.filled { background: #FFF275; box-shadow: 0 0 8px #FFF275; }
 
+    /* STUDENT TOOLBAR (VIEW SWITCHER & FILTERS) */
+    .student-toolbar {
+      display: flex; justify-content: space-between; align-items: center; gap: 10px;
+      flex-wrap: wrap; margin-bottom: 14px;
+      background: var(--card); border: 2px solid var(--border); border-radius: 16px;
+      padding: 10px 12px; box-shadow: 0 4px 0 var(--border);
+    }
+    .view-tabs, .status-filters { display: flex; gap: 6px; flex-wrap: wrap; }
+    .filter-chip {
+      border: 2px solid var(--border); background: #fff; color: var(--text);
+      padding: 6px 11px; border-radius: 99px; font-size: 0.78rem; font-weight: 800;
+      cursor: pointer; transition: all 0.12s;
+    }
+    .filter-chip.active {
+      border-color: var(--duo-blue); background: #E0F2FE; color: #0369A1;
+    }
+    .filter-chip.dup-chip.active {
+      border-color: var(--duo-red); background: #FEE2E2; color: #B91C1C;
+    }
+
+    /* CARDS & FOCUS MODE */
     .card {
       background: var(--card); border: 2px solid var(--border);
       border-radius: 20px; padding: 16px; box-shadow: 0 5px 0 var(--border);
@@ -92,18 +123,98 @@
     }
     .badge-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
     .badge {
-      font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 99px;
-      background: #EEF2FF; color: #3730A3;
+      font-size: 0.73rem; font-weight: 800; padding: 4px 9px; border-radius: 99px;
+      background: #EEF2FF; color: #3730A3; display: inline-flex; align-items: center; gap: 4px;
     }
     .badge.lang-en { background: #DBEAFE; color: #1E40AF; }
     .badge.lang-zh { background: #FEE2E2; color: #991B1B; }
-    .lesson-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 8px; }
+    .badge.dup-badge {
+      background: #FEE2E2; color: #B91C1C; border: 1.5px solid #EF4444;
+      animation: pulseDup 1.8s infinite;
+    }
+    @keyframes pulseDup {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+    }
+    .lesson-title { font-size: 1.18rem; font-weight: 800; margin-bottom: 8px; line-height: 1.35; }
     .callout {
       background: #FFFBEB; border-left: 4px solid var(--duo-orange);
-      padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 12px;
+      padding: 8px 12px; border-radius: 8px; font-size: 0.84rem; margin-bottom: 12px;
+    }
+    .dup-alert-box {
+      background: #FEF2F2; border: 2px dashed #EF4444; color: #991B1B;
+      padding: 9px 12px; border-radius: 12px; font-size: 0.82rem; font-weight: 700;
+      margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
     }
     .nav-swipe { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 12px; }
 
+    /* YOUTUBE GRID VIEW (LƯỚI VIDEO CẦN XEM) */
+    .yt-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(275px, 1fr));
+      gap: 16px;
+    }
+    .yt-card {
+      background: var(--card); border: 2px solid var(--border);
+      border-radius: 20px; overflow: hidden;
+      box-shadow: 0 5px 0 var(--border);
+      display: flex; flex-direction: column;
+      transition: transform 0.14s, border-color 0.14s;
+      position: relative;
+    }
+    .yt-card:hover { transform: translateY(-3px); border-color: var(--duo-blue); }
+    .yt-card.is-done { border-color: #86EFAC; background: #F0FDF4; }
+    .yt-card.is-duplicate { border-color: #EF4444; background: #FFFDFD; box-shadow: 0 5px 0 #FCA5A5; }
+
+    .yt-thumb-wrap {
+      position: relative; width: 100%; padding-top: 56.25%;
+      background: #0F172A; overflow: hidden; cursor: pointer;
+    }
+    .yt-thumb-wrap img {
+      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.25s;
+    }
+    .yt-card:hover .yt-thumb-wrap img { transform: scale(1.04); }
+    .yt-play-overlay {
+      position: absolute; inset: 0; background: rgba(0,0,0,0.25);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .yt-play-circle {
+      width: 48px; height: 48px; border-radius: 99px;
+      background: rgba(88, 204, 2, 0.95); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.25rem; box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+    }
+    .yt-card.is-duplicate .yt-play-circle { background: rgba(255, 75, 75, 0.95); }
+    .yt-time-pill {
+      position: absolute; bottom: 8px; right: 8px;
+      background: rgba(15, 23, 42, 0.85); color: #fff;
+      font-size: 0.74rem; font-weight: 800; padding: 3px 8px; border-radius: 8px;
+    }
+    .yt-status-ribbon {
+      position: absolute; top: 8px; left: 8px;
+      font-size: 0.72rem; font-weight: 900; padding: 4px 10px; border-radius: 99px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    .ribbon-todo { background: #1CB0F6; color: #fff; }
+    .ribbon-done { background: #58CC02; color: #fff; }
+    .yt-dup-ribbon {
+      position: absolute; top: 8px; right: 8px;
+      background: #FF4B4B; color: #fff;
+      font-size: 0.72rem; font-weight: 900; padding: 4px 10px; border-radius: 99px;
+      box-shadow: 0 2px 8px rgba(239, 68, 68, 0.5);
+    }
+
+    .yt-body { padding: 14px; display: flex; flex-direction: column; flex: 1; }
+    .yt-card-title { font-size: 1rem; font-weight: 800; margin-bottom: 6px; line-height: 1.35; }
+    .yt-meta-note { font-size: 0.8rem; color: var(--muted); margin-bottom: 10px; flex: 1; }
+    .yt-dup-box {
+      background: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5;
+      border-radius: 10px; padding: 6px 9px; font-size: 0.76rem; font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    /* VIDEO MODAL */
     .modal-backdrop {
       position: fixed; inset: 0; background: rgba(0,0,0,0.75);
       display: none; align-items: center; justify-content: center; z-index: 100; padding: 12px;
@@ -134,6 +245,7 @@
     .quiz-opt.correct { border-color: var(--duo-green); background: var(--duo-green-light); }
     .quiz-opt.wrong { border-color: var(--duo-red); background: #FEE2E2; }
 
+    /* ADMIN TABLES */
     table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-top: 8px; }
     th, td { border: 1px solid var(--border); padding: 8px; text-align: left; }
     th { background: #1E293B; color: #fff; }
@@ -175,7 +287,7 @@
   <div class="admin-banner" id="adminBanner">
     <div>
       <strong style="color:#B45309">🛡️ Quyền Quản Trị Viên (Admin Permission)</strong>
-      <div style="font-size:0.78rem;color:#92400E">Bạn có toàn quyền chỉnh sửa Google Sheet, thêm bài học và xem thống kê học viên.</div>
+      <div style="font-size:0.78rem;color:#92400E">Bạn có toàn quyền chỉnh sửa Google Sheet, thêm bài học và kiểm tra video trùng lặp.</div>
     </div>
     <div style="display:flex;gap:6px">
       <a class="btn-3d btn-green" id="linkOpenSheet" href="#" target="_blank" rel="noopener">📂 Mở Google Sheet Gốc</a>
@@ -183,7 +295,7 @@
     </div>
   </div>
 
-  <!-- STREAK HERO (HIỂN THỊ CHO HỌC VIÊN) -->
+  <!-- STREAK HERO (BẢNG THÀNH TÍCH HỌC VIÊN) -->
   <div class="streak-hero">
     <div class="streak-top">
       <div>
@@ -206,24 +318,48 @@
       </div>
       <div class="stat-pill">
         <div class="val" id="uiDoneCount">0</div>
-        <div class="lbl" id="lblDoneCount">Bài đã học</div>
+        <div class="lbl" id="lblDoneCount">Đã hoàn thành</div>
+      </div>
+      <div class="stat-pill">
+        <div class="val" id="uiTodoCount">0</div>
+        <div class="lbl" id="lblTodoCount">Cần xem</div>
       </div>
     </div>
     <div class="dots-bar" id="streakDots"></div>
   </div>
 
-  <!-- GIAO DIỆN ĐƠN GIẢN DÀNH CHO HỌC VIÊN (USER PERMISSION) -->
-  <div id="simpleSection">
+  <!-- THANH CHUYỂN ĐỔI CHẾ ĐỘ XEM & LỌC VIDEO CHO HỌC SINH -->
+  <div class="student-toolbar">
+    <div class="view-tabs">
+      <button class="btn-3d btn-outline active" id="btnViewGrid" onclick="setStudentView('GRID')">🎬 Lưới YouTube cần xem</button>
+      <button class="btn-3d btn-outline" id="btnViewCard" onclick="setStudentView('CARD')">📱 Thẻ học 1 chạm</button>
+    </div>
+    <div class="status-filters" id="statusFilterGroup">
+      <button class="filter-chip active" id="fltAll" onclick="setStatusFilter('ALL')">Tất cả</button>
+      <button class="filter-chip" id="fltTodo" onclick="setStatusFilter('TODO')">🎯 Cần xem</button>
+      <button class="filter-chip" id="fltDone" onclick="setStatusFilter('DONE')">✅ Đã xem</button>
+      <button class="filter-chip dup-chip" id="fltDup" onclick="setStatusFilter('DUP')">⚠️ Đã trùng</button>
+    </div>
+  </div>
+
+  <!-- CHẾ ĐỘ 1: LƯỚI CÁC VIDEO YOUTUBE CẦN XEM (MẶC ĐỊNH MỚI CHO HỌC SINH) -->
+  <div id="gridSection">
+    <div class="yt-grid" id="ytGridContainer"></div>
+  </div>
+
+  <!-- CHẾ ĐỘ 2: THẺ ĐƠN GIẢN 1 CHẠM (FOCUS SWIPE CARD) -->
+  <div id="simpleSection" style="display:none">
     <div class="card" id="touchLessonCard">
       <div class="badge-row" id="cardBadges"></div>
       <div class="lesson-title" id="cardTitle">...</div>
+      <div id="cardDuplicateAlert"></div>
       <div id="cardDynamicMeta"></div>
       <button class="btn-3d btn-green" style="width:100%;padding:14px;font-size:1rem" onclick="openCurrentLesson()" id="btnWatchNow">
         ▶ Xem YouTube & Nhận XP
       </button>
       <div class="nav-swipe">
         <button class="btn-3d btn-outline" onclick="stepLesson(-1)" id="btnPrev">◀ Bài trước</button>
-        <span style="font-size:0.82rem;font-weight:800;color:var(--muted)" id="cardCounter">1 / 4</span>
+        <span style="font-size:0.82rem;font-weight:800;color:var(--muted)" id="cardCounter">1 / 1</span>
         <button class="btn-3d btn-outline" onclick="stepLesson(1)" id="btnNext">Bài tiếp ▶</button>
       </div>
     </div>
@@ -231,10 +367,9 @@
 
   <!-- KHU VỰC QUẢN TRỊ (CHỈ ADMIN PERMISSION MỚI XEM ĐƯỢC) -->
   <div id="adminSection" style="display:none">
-    <!-- 1. PHÂN BIỆT ĐƯỜNG DẪN CHIA SẺ -->
     <div class="card">
       <h3 style="margin-bottom:8px">🔗 Đường dẫn phân quyền (URL Routing)</h3>
-      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:6px">1. Đường dẫn gửi cho Học viên (Chỉ hiện bài học & Streak, ẩn toàn bộ cấu hình):</p>
+      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:6px">1. Đường dẫn gửi cho Học viên (Chỉ hiện Lưới YouTube cần xem & Streak):</p>
       <div class="url-box" id="urlStudentBox"></div>
       <p style="font-size:0.82rem;color:var(--muted);margin-bottom:6px">2. Đường dẫn dành riêng cho Admin (Tự động mở khóa quyền Quản trị):</p>
       <div class="url-box" id="urlAdminBox"></div>
@@ -242,11 +377,10 @@
       <div id="syncStatus" style="font-size:0.8rem;margin-top:6px;color:var(--muted)"></div>
     </div>
 
-    <!-- 2. THÊM BÀI HỌC MỚI TRỰC TIẾP TỪ WEB LÊN GOOGLE SHEET (CẦN ADMIN KEY) -->
     <div class="card">
-      <h3 style="margin-bottom:10px">➕ Thêm bài học mới vào Google Sheet (Admin Only)</h3>
+      <h3 style="margin-bottom:10px">➕ Thêm bài học mới vào Google Sheet (Tự động kiểm tra trùng YouTube)</h3>
       <div class="form-grid">
-        <input type="text" id="newId" placeholder="Mã bài (VD: EN_04)" />
+        <input type="text" id="newId" placeholder="Mã bài (VD: EN_05)" />
         <select id="newLang">
           <option value="EN">🇬🇧 Tiếng Anh (EN)</option>
           <option value="ZH">🇨🇳 Tiếng Trung (ZH)</option>
@@ -254,7 +388,7 @@
       </div>
       <input type="text" id="newTitleVi" placeholder="Tiêu đề Tiếng Việt" />
       <input type="text" id="newTitleEn" placeholder="Tiêu đề Tiếng Anh (Title EN)" />
-      <input type="text" id="newYoutube" placeholder="Link YouTube (https://www.youtube.com/watch?v=...)" />
+      <input type="text" id="newYoutube" placeholder="Link YouTube (Nếu trùng link cũ hệ thống sẽ báo Đã trùng)" />
       <div class="form-grid">
         <input type="number" id="newReqSec" placeholder="Số giây bắt buộc xem (VD: 20)" value="20" />
         <input type="number" id="newXP" placeholder="Điểm thưởng XP (VD: 25)" value="25" />
@@ -264,34 +398,28 @@
       <button class="btn-3d btn-green" onclick="adminAddLesson()">💾 Lưu vào Google Sheet & Cập nhật App</button>
     </div>
 
-    <!-- 3. BẢNG THỐNG KÊ ĐIỂM HỌC VIÊN (CHỈ ADMIN XEM ĐƯỢC) -->
     <div class="card">
       <h3 style="margin-bottom:8px">📈 Lịch sử điểm & Streak của Học viên (Trang LichSuDiem)</h3>
       <div style="overflow-x:auto">
-        <table id="logsTable">
-          <tr><th>Thời gian</th><th>Email Học viên</th><th>Mã bài</th><th>Đã xem</th><th>Điểm XP</th><th>Chuỗi bài</th></tr>
-        </table>
+        <table id="logsTable"></table>
       </div>
     </div>
 
-    <!-- 4. DANH SÁCH BÀI HỌC & MÃ APPS SCRIPT PHÂN QUYỀN -->
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
-        <h3>📊 Danh sách bài học trên Sheet (DanhSachBaiHoc)</h3>
+        <h3>📊 Danh sách bài học trên Sheet (Kiểm tra trùng mã YouTube)</h3>
         <button class="btn-3d btn-outline" onclick="toggleScriptCode()">📋 Xem mã Apps Script phân quyền</button>
       </div>
-      <pre id="appsScriptBox" style="display:none">// Dán mã này vào Tiện ích mở rộng -> Apps Script trên file Google Sheet của bạn
-const ADMIN_SECRET_KEY = "LINGO_ADMIN_2026";
+      <pre id="appsScriptBox" style="display:none">const ADMIN_SECRET_KEY = "LINGO_ADMIN_2026";
 
 function doGet(e) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const action = (e && e.parameter && e.parameter.action) ? e.parameter.action : "lessons";
   const clientKey = (e && e.parameter && e.parameter.adminKey) ? e.parameter.adminKey : "";
 
-  // 1. Nếu Admin yêu cầu xem toàn bộ lịch sử điểm học viên (kiểm tra đúng ADMIN_SECRET_KEY)
   if (action === "admin_logs") {
     if (clientKey !== ADMIN_SECRET_KEY) {
-      return ContentService.createTextOutput(JSON.stringify({ status: "forbidden", message: "Sai mã Admin!" }))
+      return ContentService.createTextOutput(JSON.stringify({ status: "forbidden" }))
         .setMimeType(ContentService.MimeType.JSON);
     }
     const logSheet = ss.getSheetByName("LichSuDiem");
@@ -300,7 +428,6 @@ function doGet(e) {
       .setMimeType(ContentService.MimeType.JSON);
   }
 
-  // 2. Mặc định cho Học viên (User Permission): Chỉ trả về các bài học đang kích hoạt (status != FALSE)
   const sheet = ss.getSheetByName("DanhSachBaiHoc") || ss.getSheets()[0];
   const rows = sheet.getDataRange().getValues();
   const headers = rows[0].map(h => String(h).trim());
@@ -321,7 +448,6 @@ function doPost(e) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const d = JSON.parse(e.postData.contents);
 
-  // 1. Tác vụ của Admin: Thêm bài học mới vào DanhSachBaiHoc (Bắt buộc đúng adminKey)
   if (d.action === "add_lesson") {
     if (d.adminKey !== ADMIN_SECRET_KEY) {
       return ContentService.createTextOutput(JSON.stringify({ status: "forbidden" }))
@@ -336,7 +462,6 @@ function doPost(e) {
       .setMimeType(ContentService.MimeType.JSON);
   }
 
-  // 2. Tác vụ của Học viên (User Permission): Chỉ được phép ghi điểm vào LichSuDiem
   let logSheet = ss.getSheetByName("LichSuDiem") || ss.insertSheet("LichSuDiem");
   logSheet.appendRow([new Date(), d.email, d.lessonId, d.watchedSec, d.xpEarned, d.lessonStreak]);
   return ContentService.createTextOutput(JSON.stringify({ status: "score_saved" }))
@@ -356,6 +481,7 @@ function doPost(e) {
       <strong id="modalTitle">Bài học</strong>
       <button class="btn-3d btn-outline" style="padding:4px 10px" onclick="closeModal()">✕</button>
     </div>
+    <div id="modalDupBanner"></div>
     <div class="video-wrap" id="videoContainer"></div>
     <div class="timer-bar">
       <span id="timerText">⏱ Đã xem: 0 / 15s</span>
@@ -373,22 +499,12 @@ function doPost(e) {
 // 1. CẤU HÌNH ĐƯỜNG DẪN CỐ ĐỊNH & PHÂN QUYỀN (GẮN TRỰC TIẾP TRONG CODE)
 // ============================================================================
 const APP_CONFIG = {
-  // 1. Đường dẫn Web App của Google Apps Script (Tự động tải bài học & gửi điểm cho cả Admin và Học viên)
   APPS_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbx57s4WlRfK5KrLtu_IY1qBdhg5f5Jk3SdsykrlrkgnaaUab1TCCpT7UPd2JegobiYM/exec",
-
-  // 2. Đường dẫn mở trực tiếp tệp Google Sheet gốc (Chỉ hiển thị cho Admin)
   GOOGLE_SHEET_EDIT_URL: "https://docs.google.com/spreadsheets/d/1-Nhz3AbBIuNg-IrQ_X_LN3c4O4edSz04lPpvRhWbeJ8/edit?usp=sharing",
-
-  // 3. Mã khóa bí mật dành riêng cho Admin (Dùng trên URL ?role=admin&key=LINGO_ADMIN_2026 hoặc bấm nút 🔐)
   ADMIN_SECRET_KEY: "LINGO_ADMIN_2026",
-
-  // 4. Danh sách Email của Admin
   ADMIN_EMAILS: ["admin@lingotube.edu.vn", "giaovien@gmail.com"]
 };
 
-// ============================================================================
-// 2. KIỂM TRA QUYỀN TRUY CẬP TỪ ĐƯỜNG DẪN URL (PERMISSION ROUTER)
-// ============================================================================
 function detectPermissionFromUrl() {
   const params = new URLSearchParams(window.location.search);
   const roleParam = (params.get("role") || "").toLowerCase();
@@ -403,7 +519,7 @@ function detectPermissionFromUrl() {
 }
 
 // ============================================================================
-// 3. DỮ LIỆU MẪU DỰ PHÒNG & BỘ CHUẨN HÓA PHÒNG VỆ
+// 2. DỮ LIỆU MẪU (CÓ SẴN VÍ DỤ VIDEO TRÙNG LẶP ĐỂ KIỂM THỬ NGAY)
 // ============================================================================
 const DEFAULT_META_CONFIG = [
   { field_key: "meta_level", label_vi: "Cấp độ", label_en: "Level", display_type: "badge", active: "TRUE" },
@@ -436,6 +552,30 @@ const DEFAULT_RAW_LESSONS = [
     meta_level: "A2 - Sơ cấp", meta_note: "Luyện trước gương 5 lần"
   },
   {
+    id: "EN_03", lang: "EN",
+    title_vi: "10 Phrasal Verbs thông dụng trong công việc",
+    title_en: "10 Common Work Phrasal Verbs",
+    youtube_input: "https://www.youtube.com/watch?v=3JZ_D3ELwOQ",
+    req_sec: 25, xp: 30,
+    quiz_vi: "'Call off a meeting' có nghĩa là gì?",
+    quiz_en: "What does 'Call off a meeting' mean?",
+    options: "Hủy cuộc họp|Gọi điện trong cuộc họp|Kéo dài cuộc họp|Bắt đầu cuộc họp sớm",
+    correct_idx: 0, status: "TRUE",
+    meta_level: "B1 - Trung cấp", meta_note: "Ghi chép kèm câu ví dụ"
+  },
+  {
+    id: "EN_04", lang: "EN",
+    title_vi: "Ôn tập Chào hỏi phản xạ (Video đăng trùng link EN_01)",
+    title_en: "Greetings Review (Duplicate YouTube Link with EN_01)",
+    youtube_input: "https://youtu.be/dQw4w9WgXcQ",
+    req_sec: 15, xp: 20,
+    quiz_vi: "Cụm từ nào dùng để hỏi thăm tự nhiên?",
+    quiz_en: "Which phrase is a natural native greeting?",
+    options: "How's it going?|What is your name?",
+    correct_idx: 0, status: "TRUE",
+    meta_level: "A1 - Ôn tập", meta_note: "Bài minh họa tính năng phát hiện trùng link YouTube"
+  },
+  {
     id: "ZH_01", lang: "ZH",
     title_vi: "Tiếng Trung HSK 1: Chào hỏi và Giới thiệu tên",
     title_en: "Chinese HSK 1: Greetings & Intro",
@@ -461,6 +601,9 @@ const DEFAULT_RAW_LESSONS = [
   }
 ];
 
+// ============================================================================
+// 3. CHUẨN HÓA DỮ LIỆU & THUẬT TOÁN PHÁT HIỆN VIDEO YOUTUBE ĐÃ TRÙNG
+// ============================================================================
 function normalizeSafeLesson(rawRow, index) {
   const getVal = (key, fallback = "") => {
     const val = rawRow[key];
@@ -491,8 +634,34 @@ function normalizeSafeLesson(rawRow, index) {
   };
 }
 
+// Quét toàn bộ danh sách để đánh dấu những bài học có cùng mã YouTube (youtubeId)
+function markDuplicateYoutubeLessons(lessonsList) {
+  const firstSeenByYtId = {};
+  const countByYtId = {};
+
+  lessonsList.forEach(item => {
+    countByYtId[item.youtubeId] = (countByYtId[item.youtubeId] || 0) + 1;
+    if (!firstSeenByYtId[item.youtubeId]) {
+      firstSeenByYtId[item.youtubeId] = item.id;
+    }
+  });
+
+  return lessonsList.map(item => {
+    const totalSameVideo = countByYtId[item.youtubeId] || 1;
+    const originalId = firstSeenByYtId[item.youtubeId];
+    const isDuplicate = totalSameVideo > 1 && item.id !== originalId;
+    const hasDuplicateGroup = totalSameVideo > 1;
+    return {
+      ...item,
+      isDuplicate,
+      hasDuplicateGroup,
+      duplicateOfId: isDuplicate ? originalId : null
+    };
+  });
+}
+
 // ============================================================================
-// 4. GIAO TIẾP API VỚI GOOGLE SHEET THEO QUYỀN (USER VS ADMIN)
+// 4. TRẠNG THÁI ỨNG DỤNG & ĐA NGÔN NGỮ
 // ============================================================================
 const perm = detectPermissionFromUrl();
 
@@ -502,23 +671,434 @@ let state = {
   showAdminPanel: perm.isAdmin,
   email: localStorage.getItem("lt_email") || "hocvien01@gmail.com",
   courseFilter: "ALL",
+  statusFilter: "ALL", // ALL | TODO | DONE | DUP
+  studentView: "GRID", // GRID | CARD
   uiLang: "VI",
   currentIndex: 0,
   lessonStreak: parseInt(localStorage.getItem("lt_lesson_streak") || "2", 10),
   dayStreak: parseInt(localStorage.getItem("lt_day_streak") || "3", 10),
   totalXP: parseInt(localStorage.getItem("lt_total_xp") || "40", 10),
   completedIds: JSON.parse(localStorage.getItem("lt_done_ids") || '["EN_01"]'),
-  lessons: DEFAULT_RAW_LESSONS.map(normalizeSafeLesson).filter(l => l.active),
+  lessons: markDuplicateYoutubeLessons(DEFAULT_RAW_LESSONS.map(normalizeSafeLesson).filter(l => l.active)),
   studentLogs: [
     ["2026-11-12 08:30", "hocvien01@gmail.com", "EN_01", "18s", "+20 XP", "🔥 1"],
-    ["2026-11-12 08:35", "hocvien01@gmail.com", "ZH_01", "22s", "+20 XP", "🔥 2"],
-    ["2026-11-12 09:10", "hocvien02@gmail.com", "EN_02", "25s", "+25 XP", "🔥 5"]
+    ["2026-11-12 08:35", "hocvien01@gmail.com", "ZH_01", "22s", "+20 XP", "🔥 2"]
   ],
   watchTimer: null,
   watchedSec: 0,
   quizPassed: false
 };
 
+const I18N = {
+  VI: {
+    roleUser: "👤 Học viên",
+    roleAdmin: "🛡️ Quản trị viên (Admin)",
+    lessonStreak: "Chuỗi bài học liên tục",
+    dayStreak: "Ngày Streak",
+    totalXP: "Tổng điểm XP",
+    doneCount: "Đã hoàn thành",
+    todoCount: "Video cần xem",
+    switchUser: "Đổi tài khoản",
+    viewGrid: "🎬 Lưới YouTube cần xem",
+    viewCard: "📱 Thẻ học 1 chạm",
+    fltAll: "Tất cả",
+    fltTodo: "🎯 Cần xem",
+    fltDone: "✅ Đã xem",
+    fltDup: "⚠️ Đã trùng",
+    ribbonTodo: "🎯 Cần xem",
+    ribbonDone: "✅ Đã hoàn thành",
+    ribbonDup: "⚠️ ĐÃ TRÙNG",
+    dupNotice: "⚠️ Đã trùng video YouTube với bài",
+    dupWatchedNotice: " (Bạn đã xem video này rồi)",
+    watchNow: "▶ Xem YouTube & Nhận XP",
+    rewatch: "🔄 Xem lại video",
+    prev: "◀ Bài trước",
+    next: "Bài tiếp ▶",
+    watched: "⏱ Đã xem",
+    lockedBtn: "🔒 Xem đủ giờ & Chọn đáp án đúng để nhận XP",
+    claimBtn: "🎉 Hoàn thành & Cộng điểm XP!",
+    emptyGrid: "Không có video nào trong bộ lọc này."
+  },
+  EN: {
+    roleUser: "👤 Student",
+    roleAdmin: "🛡️ Administrator",
+    lessonStreak: "Consecutive Lesson Streak",
+    dayStreak: "Day Streak",
+    totalXP: "Total XP",
+    doneCount: "Completed",
+    todoCount: "To Watch",
+    switchUser: "Switch Account",
+    viewGrid: "🎬 YouTube Grid to Watch",
+    viewCard: "📱 1-Tap Swipe Card",
+    fltAll: "All",
+    fltTodo: "🎯 To Watch",
+    fltDone: "✅ Watched",
+    fltDup: "⚠️ Duplicate",
+    ribbonTodo: "🎯 To Watch",
+    ribbonDone: "✅ Completed",
+    ribbonDup: "⚠️ DUPLICATE",
+    dupNotice: "⚠️ Duplicate YouTube video with lesson",
+    dupWatchedNotice: " (You already watched this video)",
+    watchNow: "▶ Watch YouTube & Earn XP",
+    rewatch: "🔄 Watch Again",
+    prev: "◀ Prev",
+    next: "Next ▶",
+    watched: "⏱ Watched",
+    lockedBtn: "🔒 Watch required time & Answer quiz to claim XP",
+    claimBtn: "🎉 Complete & Claim XP!",
+    emptyGrid: "No videos match the current filter."
+  }
+};
+
+// ============================================================================
+// 5. LỌC DỮ LIỆU & CHUYỂN ĐỔI GIAO DIỆN HỌC SINH
+// ============================================================================
+function isSameVideoAlreadyWatched(lesson) {
+  return state.lessons.some(other =>
+    other.id !== lesson.id &&
+    other.youtubeId === lesson.youtubeId &&
+    state.completedIds.includes(other.id)
+  );
+}
+
+function getCourseLessons() {
+  if (state.courseFilter === "ALL") return state.lessons;
+  return state.lessons.filter(l => l.lang === state.courseFilter);
+}
+
+function getFilteredLessons() {
+  const base = getCourseLessons();
+  if (state.statusFilter === "TODO") {
+    return base.filter(l => !state.completedIds.includes(l.id));
+  }
+  if (state.statusFilter === "DONE") {
+    return base.filter(l => state.completedIds.includes(l.id));
+  }
+  if (state.statusFilter === "DUP") {
+    return base.filter(l => l.isDuplicate || l.hasDuplicateGroup);
+  }
+  return base;
+}
+
+function setCourseFilter(filter) {
+  state.courseFilter = filter;
+  state.uiLang = (filter === "EN") ? "EN" : "VI";
+  state.currentIndex = 0;
+  document.getElementById("btnLangAll").classList.toggle("active", filter === "ALL");
+  document.getElementById("btnLangEN").classList.toggle("active", filter === "EN");
+  document.getElementById("btnLangZH").classList.toggle("active", filter === "ZH");
+  renderAll();
+}
+
+function setStatusFilter(status) {
+  state.statusFilter = status;
+  state.currentIndex = 0;
+  document.getElementById("fltAll").classList.toggle("active", status === "ALL");
+  document.getElementById("fltTodo").classList.toggle("active", status === "TODO");
+  document.getElementById("fltDone").classList.toggle("active", status === "DONE");
+  document.getElementById("fltDup").classList.toggle("active", status === "DUP");
+  renderAll();
+}
+
+function setStudentView(viewMode) {
+  state.studentView = viewMode;
+  document.getElementById("btnViewGrid").classList.toggle("active", viewMode === "GRID");
+  document.getElementById("btnViewCard").classList.toggle("active", viewMode === "CARD");
+  document.getElementById("gridSection").style.display = (viewMode === "GRID") ? "block" : "none";
+  document.getElementById("simpleSection").style.display = (viewMode === "CARD") ? "block" : "none";
+  renderAll();
+}
+
+function stepLesson(dir) {
+  const list = getFilteredLessons();
+  if (!list.length) return;
+  state.currentIndex = (state.currentIndex + dir + list.length) % list.length;
+  renderAll();
+}
+
+// ============================================================================
+// 6. RENDER LƯỚI YOUTUBE CẦN XEM & CẢNH BÁO VIDEO ĐÃ TRÙNG
+// ============================================================================
+function renderAll() {
+  const t = I18N[state.uiLang];
+  const courseList = getCourseLessons();
+  const filteredList = getFilteredLessons();
+
+  const doneInCourse = courseList.filter(l => state.completedIds.includes(l.id)).length;
+  const todoInCourse = Math.max(0, courseList.length - doneInCourse);
+  const dupCount = courseList.filter(l => l.isDuplicate).length;
+
+  const roleBadge = document.getElementById("uiRoleBadge");
+  roleBadge.textContent = state.isAdmin ? t.roleAdmin : t.roleUser;
+  roleBadge.classList.toggle("admin", state.isAdmin);
+
+  document.getElementById("adminBanner").style.display = state.isAdmin ? "flex" : "none";
+  document.getElementById("btnAdminPanel").style.display = state.isAdmin ? "inline-flex" : "none";
+  document.getElementById("btnAdminLogin").style.display = state.isAdmin ? "none" : "inline-flex";
+  document.getElementById("adminSection").style.display = (state.isAdmin && state.showAdminPanel) ? "block" : "none";
+  document.getElementById("linkOpenSheet").href = APP_CONFIG.GOOGLE_SHEET_EDIT_URL;
+  document.getElementById("btnFastForward").style.display = state.isAdmin ? "inline-flex" : "none";
+
+  const baseUrl = window.location.origin + window.location.pathname;
+  document.getElementById("urlStudentBox").textContent = `${baseUrl}?role=user`;
+  document.getElementById("urlAdminBox").textContent = `${baseUrl}?role=admin&key=${APP_CONFIG.ADMIN_SECRET_KEY}`;
+
+  document.getElementById("uiLessonStreak").textContent = `🔥 ${state.lessonStreak}`;
+  document.getElementById("lblLessonStreak").textContent = t.lessonStreak;
+  document.getElementById("uiDayStreak").textContent = state.dayStreak;
+  document.getElementById("lblDayStreak").textContent = t.dayStreak;
+  document.getElementById("uiTotalXP").textContent = state.totalXP;
+  document.getElementById("lblTotalXP").textContent = t.totalXP;
+  document.getElementById("uiDoneCount").textContent = doneInCourse;
+  document.getElementById("lblDoneCount").textContent = t.doneCount;
+  document.getElementById("uiTodoCount").textContent = todoInCourse;
+  document.getElementById("lblTodoCount").textContent = t.todoCount;
+  document.getElementById("uiUserEmail").textContent = state.email;
+  document.getElementById("btnSwitchUser").textContent = t.switchUser;
+
+  document.getElementById("btnViewGrid").textContent = t.viewGrid;
+  document.getElementById("btnViewCard").textContent = t.viewCard;
+  document.getElementById("fltAll").textContent = `${t.fltAll} (${courseList.length})`;
+  document.getElementById("fltTodo").textContent = `${t.fltTodo} (${todoInCourse})`;
+  document.getElementById("fltDone").textContent = `${t.fltDone} (${doneInCourse})`;
+  document.getElementById("fltDup").textContent = `${t.fltDup} (${dupCount})`;
+
+  const progressInFive = state.lessonStreak % 5;
+  let dotsHtml = "";
+  for (let i = 1; i <= 5; i++) {
+    const filled = (progressInFive === 0 && state.lessonStreak > 0) || i <= progressInFive;
+    dotsHtml += `<div class="dot ${filled ? 'filled' : ''}"></div>`;
+  }
+  document.getElementById("streakDots").innerHTML = dotsHtml;
+
+  // RENDER 1: LƯỚI YOUTUBE CẦN XEM (GRID VIEW)
+  const gridEl = document.getElementById("ytGridContainer");
+  if (!filteredList.length) {
+    gridEl.innerHTML = `<div class="card" style="grid-column:1/-1;text-align:center;color:var(--muted);font-weight:700">${t.emptyGrid}</div>`;
+  } else {
+    gridEl.innerHTML = filteredList.map((item) => {
+      const isDone = state.completedIds.includes(item.id);
+      const watchedOtherSameYt = isSameVideoAlreadyWatched(item);
+      const title = state.uiLang === "EN" ? item.titleEn : item.titleVi;
+      const thumbUrl = `https://i.ytimg.com/vi/${item.youtubeId}/mqdefault.jpg`;
+      const levelVal = item.raw.meta_level || "";
+      const noteVal = item.raw.meta_note || "";
+
+      const dupBannerHtml = item.isDuplicate
+        ? `<div class="yt-dup-box">
+             ${t.dupNotice} <strong>#${item.duplicateOfId}</strong> (ID: <code>${item.youtubeId}</code>)${watchedOtherSameYt ? t.dupWatchedNotice : ""}
+           </div>`
+        : "";
+
+      return `
+        <div class="yt-card ${isDone ? 'is-done' : ''} ${item.isDuplicate ? 'is-duplicate' : ''}">
+          <div class="yt-thumb-wrap" onclick="openLessonById('${item.id}')">
+            <img src="${thumbUrl}" alt="${title}" loading="lazy" />
+            <div class="yt-play-overlay">
+              <div class="yt-play-circle">▶</div>
+            </div>
+            <span class="yt-status-ribbon ${isDone ? 'ribbon-done' : 'ribbon-todo'}">
+              ${isDone ? t.ribbonDone : t.ribbonTodo}
+            </span>
+            ${item.isDuplicate ? `<span class="yt-dup-ribbon">${t.ribbonDup} (#${item.duplicateOfId})</span>` : ""}
+            <span class="yt-time-pill">⏱ ${item.reqSec}s • +${item.xp} XP</span>
+          </div>
+          <div class="yt-body">
+            <div class="badge-row">
+              <span class="badge ${item.lang === 'EN' ? 'lang-en' : 'lang-zh'}">${item.lang === 'EN' ? '🇬🇧 EN' : '🇨🇳 ZH'} • #${item.id}</span>
+              ${levelVal ? `<span class="badge">${levelVal}</span>` : ""}
+              ${item.isDuplicate ? `<span class="badge dup-badge">⚠️ Đã trùng #${item.duplicateOfId}</span>` : ""}
+            </div>
+            <div class="yt-card-title">${title}</div>
+            ${dupBannerHtml}
+            ${noteVal ? `<div class="yt-meta-note">💡 ${noteVal}</div>` : `<div class="yt-meta-note"></div>`}
+            <button class="btn-3d ${isDone ? 'btn-outline' : (item.isDuplicate ? 'btn-orange' : 'btn-green')}" style="width:100%" onclick="openLessonById('${item.id}')">
+              ${isDone ? t.rewatch : t.watchNow}
+            </button>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  // RENDER 2: THẺ HỌC 1 CHẠM (FOCUS CARD VIEW)
+  if (filteredList.length > 0) {
+    const item = filteredList[state.currentIndex] || filteredList[0];
+    const isDone = state.completedIds.includes(item.id);
+    const watchedOtherSameYt = isSameVideoAlreadyWatched(item);
+
+    document.getElementById("cardBadges").innerHTML = `
+      <span class="badge ${item.lang === 'EN' ? 'lang-en' : 'lang-zh'}">${item.lang === 'EN' ? '🇬🇧 English' : '🇨🇳 中文'} • #${item.id}</span>
+      <span class="badge">⚡ +${item.xp} XP</span>
+      <span class="badge">⏱ ${item.reqSec}s</span>
+      ${isDone ? `<span class="badge" style="background:#DCFCE7;color:#166534">${t.ribbonDone}</span>` : `<span class="badge">${t.ribbonTodo}</span>`}
+      ${item.isDuplicate ? `<span class="badge dup-badge">${t.ribbonDup} (#${item.duplicateOfId})</span>` : ""}
+    `;
+    document.getElementById("cardTitle").textContent = state.uiLang === "EN" ? item.titleEn : item.titleVi;
+    document.getElementById("cardCounter").textContent = `${state.currentIndex + 1} / ${filteredList.length}`;
+    document.getElementById("btnWatchNow").textContent = isDone ? t.rewatch : t.watchNow;
+    document.getElementById("btnPrev").textContent = t.prev;
+    document.getElementById("btnNext").textContent = t.next;
+
+    document.getElementById("cardDuplicateAlert").innerHTML = item.isDuplicate
+      ? `<div class="dup-alert-box">${t.dupNotice} <strong>#${item.duplicateOfId}</strong> (YouTube ID: <code>${item.youtubeId}</code>)${watchedOtherSameYt ? t.dupWatchedNotice : ""}</div>`
+      : "";
+
+    let metaHtml = "";
+    DEFAULT_META_CONFIG.forEach(cfg => {
+      if (cfg.active !== "TRUE") return;
+      const val = item.raw[cfg.field_key];
+      if (!val) return;
+      const lbl = state.uiLang === "EN" ? cfg.label_en : cfg.label_vi;
+      if (cfg.display_type === "badge") {
+        metaHtml += `<div style="margin-bottom:8px"><span class="badge">${lbl}: ${val}</span></div>`;
+      } else {
+        metaHtml += `<div class="callout"><strong>${lbl}:</strong> ${val}</div>`;
+      }
+    });
+    document.getElementById("cardDynamicMeta").innerHTML = metaHtml;
+  }
+
+  // RENDER 3: BẢNG QUẢN TRỊ ADMIN
+  if (state.isAdmin) {
+    document.getElementById("sheetTable").innerHTML = `
+      <tr><th>ID</th><th>Lang</th><th>Tiêu đề</th><th>YouTube ID</th><th>Trạng thái trùng</th><th>XP</th></tr>
+      ${state.lessons.map(l => `
+        <tr>
+          <td><strong>${l.id}</strong></td>
+          <td>${l.lang}</td>
+          <td>${state.uiLang === 'EN' ? l.titleEn : l.titleVi}</td>
+          <td><code>${l.youtubeId}</code></td>
+          <td>${l.isDuplicate
+            ? `<span class="badge dup-badge">⚠️ Đã trùng với #${l.duplicateOfId}</span>`
+            : `<span class="badge" style="background:#DCFCE7;color:#166534">✔ Duy nhất</span>`}
+          </td>
+          <td>+${l.xp}</td>
+        </tr>
+      `).join("")}
+    `;
+
+    document.getElementById("logsTable").innerHTML = `
+      <tr><th>Thời gian</th><th>Email Học viên</th><th>Mã bài</th><th>Đã xem</th><th>Điểm XP</th><th>Chuỗi bài</th></tr>
+      ${state.studentLogs.map(r => `
+        <tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td></tr>
+      `).join("")}
+    `;
+  }
+}
+
+// ============================================================================
+// 7. MỞ VIDEO TỪ LƯỚI HOẶC THẺ & KIỂM TRA TRẮC NGHIỆM
+// ============================================================================
+function openLessonById(lessonId) {
+  const filteredList = getFilteredLessons();
+  const idx = filteredList.findIndex(l => l.id === lessonId);
+  if (idx !== -1) {
+    state.currentIndex = idx;
+  }
+  const item = state.lessons.find(l => l.id === lessonId);
+  if (item) openLessonModal(item);
+}
+
+function openCurrentLesson() {
+  const list = getFilteredLessons();
+  const item = list[state.currentIndex];
+  if (item) openLessonModal(item);
+}
+
+function openLessonModal(item) {
+  const t = I18N[state.uiLang];
+  state.activeModalLesson = item;
+  state.watchedSec = 0;
+  state.quizPassed = !item.quizVi;
+
+  document.getElementById("modalTitle").textContent = `${item.id} • ${state.uiLang === "EN" ? item.titleEn : item.titleVi}`;
+  document.getElementById("modalDupBanner").innerHTML = item.isDuplicate
+    ? `<div class="dup-alert-box">${t.dupNotice} <strong>#${item.duplicateOfId}</strong> (ID: <code>${item.youtubeId}</code>)</div>`
+    : "";
+
+  document.getElementById("videoContainer").innerHTML = `
+    <iframe src="https://www.youtube.com/embed/${item.youtubeId}?autoplay=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  `;
+
+  const qText = state.uiLang === "EN" ? item.quizEn : item.quizVi;
+  if (qText) {
+    document.getElementById("quizContainer").innerHTML = `
+      <div style="font-weight:800;margin-bottom:6px">❓ ${qText}</div>
+      ${item.options.map((opt, idx) => `
+        <button class="quiz-opt" onclick="selectQuizOption(this, ${idx}, ${item.correctIdx})">${opt}</button>
+      `).join("")}
+    `;
+  } else {
+    document.getElementById("quizContainer").innerHTML = "";
+  }
+
+  document.getElementById("videoModal").classList.add("open");
+  clearInterval(state.watchTimer);
+  state.watchTimer = setInterval(() => {
+    state.watchedSec++;
+    updateModalButton(item);
+  }, 1000);
+  updateModalButton(item);
+}
+
+function selectQuizOption(btn, idx, correctIdx) {
+  document.querySelectorAll(".quiz-opt").forEach(el => el.classList.remove("correct", "wrong"));
+  if (idx === correctIdx) {
+    btn.classList.add("correct");
+    state.quizPassed = true;
+  } else {
+    btn.classList.add("wrong");
+    state.quizPassed = false;
+  }
+  updateModalButton(state.activeModalLesson);
+}
+
+function fastForwardDemo() {
+  if (!state.isAdmin || !state.activeModalLesson) return;
+  state.watchedSec = Math.max(state.watchedSec, state.activeModalLesson.reqSec);
+  updateModalButton(state.activeModalLesson);
+}
+
+function updateModalButton(item) {
+  if (!item) return;
+  const t = I18N[state.uiLang];
+  document.getElementById("timerText").textContent = `${t.watched}: ${state.watchedSec} / ${item.reqSec}s`;
+  const ready = state.watchedSec >= item.reqSec && state.quizPassed;
+  const btn = document.getElementById("btnClaimXP");
+  btn.disabled = !ready;
+  btn.textContent = ready ? t.claimBtn : t.lockedBtn;
+}
+
+async function completeLesson() {
+  const item = state.activeModalLesson;
+  if (!item) return;
+  clearInterval(state.watchTimer);
+
+  state.lessonStreak += 1;
+  const bonus = (state.lessonStreak % 5 === 0) ? 15 : 0;
+  const earned = item.xp + bonus;
+  state.totalXP += earned;
+  if (!state.completedIds.includes(item.id)) state.completedIds.push(item.id);
+
+  localStorage.setItem("lt_lesson_streak", state.lessonStreak);
+  localStorage.setItem("lt_total_xp", state.totalXP);
+  localStorage.setItem("lt_done_ids", JSON.stringify(state.completedIds));
+
+  sendScoreToSheet(state.email, item.id, state.watchedSec, earned, state.lessonStreak);
+  closeModal();
+  renderAll();
+}
+
+function closeModal() {
+  clearInterval(state.watchTimer);
+  document.getElementById("videoContainer").innerHTML = "";
+  document.getElementById("videoModal").classList.remove("open");
+}
+
+// ============================================================================
+// 8. ĐỒNG BỘ GOOGLE SHEET & QUẢN TRỊ ADMIN
+// ============================================================================
 function isValidAppsScriptUrl() {
   return APP_CONFIG.APPS_SCRIPT_URL.startsWith("https://script.google.com") &&
          !APP_CONFIG.APPS_SCRIPT_URL.includes("DAN_MA_WEB_APP");
@@ -579,10 +1159,7 @@ async function sendScoreToSheet(userEmail, lessonId, watchedSec, xpEarned, lesso
 }
 
 async function adminAddLesson() {
-  if (!state.isAdmin) {
-    alert("Bạn không có quyền Admin!");
-    return;
-  }
+  if (!state.isAdmin) return;
   const newLessonRaw = {
     id: document.getElementById("newId").value.trim() || `NEW_${Date.now().toString().slice(-3)}`,
     lang: document.getElementById("newLang").value,
@@ -599,8 +1176,15 @@ async function adminAddLesson() {
     meta_level: "Mới cập nhật"
   };
 
-  state.lessons.push(normalizeSafeLesson(newLessonRaw, state.lessons.length));
+  const normalizedNew = normalizeSafeLesson(newLessonRaw, state.lessons.length);
+  const existingDup = state.lessons.find(l => l.youtubeId === normalizedNew.youtubeId);
+
+  state.lessons = markDuplicateYoutubeLessons([...state.lessons, normalizedNew]);
   renderAll();
+
+  if (existingDup) {
+    alert(`⚠️ Cảnh báo: Video YouTube này (${normalizedNew.youtubeId}) ĐÃ TRÙNG với bài #${existingDup.id}! Hệ thống đã gắn nhãn '⚠️ ĐÃ TRÙNG' trên lưới hiển thị.`);
+  }
 
   if (isValidAppsScriptUrl()) {
     await fetch(APP_CONFIG.APPS_SCRIPT_URL, {
@@ -613,47 +1197,8 @@ async function adminAddLesson() {
         ...newLessonRaw
       })
     });
-    alert("Đã thêm bài học và gửi lên Google Sheet!");
-  } else {
-    alert("Đã thêm bài học vào bộ nhớ trình duyệt (Hãy gắn APPS_SCRIPT_URL thật trong APP_CONFIG để lưu vĩnh viễn lên Google Sheet).");
   }
 }
-
-// ============================================================================
-// 5. ĐIỀU KHIỂN GIAO DIỆN THEO QUYỀN & NGÔN NGỮ
-// ============================================================================
-const I18N = {
-  VI: {
-    roleUser: "👤 Học viên",
-    roleAdmin: "🛡️ Quản trị viên (Admin)",
-    lessonStreak: "Chuỗi bài học liên tục",
-    dayStreak: "Ngày Streak",
-    totalXP: "Tổng điểm XP",
-    doneCount: "Bài đã học",
-    switchUser: "Đổi tài khoản",
-    watchNow: "▶ Xem YouTube & Nhận XP",
-    prev: "◀ Bài trước",
-    next: "Bài tiếp ▶",
-    watched: "⏱ Đã xem",
-    lockedBtn: "🔒 Xem đủ giờ & Chọn đáp án đúng để nhận XP",
-    claimBtn: "🎉 Hoàn thành & Cộng điểm XP!"
-  },
-  EN: {
-    roleUser: "👤 Student",
-    roleAdmin: "🛡️ Administrator",
-    lessonStreak: "Consecutive Lesson Streak",
-    dayStreak: "Day Streak",
-    totalXP: "Total XP",
-    doneCount: "Completed",
-    switchUser: "Switch Account",
-    watchNow: "▶ Watch YouTube & Earn XP",
-    prev: "◀ Prev",
-    next: "Next ▶",
-    watched: "⏱ Watched",
-    lockedBtn: "🔒 Watch required time & Answer quiz to claim XP",
-    claimBtn: "🎉 Complete & Claim XP!"
-  }
-};
 
 function promptAdminLogin() {
   if (state.isAdmin) {
@@ -669,7 +1214,7 @@ function promptAdminLogin() {
     fetchAdminLogsFromSheet();
     renderAll();
   } else if (inputKey !== null) {
-    alert("❌ Sai mã khóa Admin! Bạn đang ở chế độ Học viên.");
+    alert("❌ Sai mã khóa Admin!");
   }
 }
 
@@ -689,209 +1234,6 @@ function toggleAdminView() {
   renderAll();
 }
 
-function getFilteredLessons() {
-  if (state.courseFilter === "ALL") return state.lessons;
-  return state.lessons.filter(l => l.lang === state.courseFilter);
-}
-
-function setCourseFilter(filter) {
-  state.courseFilter = filter;
-  state.uiLang = (filter === "EN") ? "EN" : "VI";
-  state.currentIndex = 0;
-  document.getElementById("btnLangAll").classList.toggle("active", filter === "ALL");
-  document.getElementById("btnLangEN").classList.toggle("active", filter === "EN");
-  document.getElementById("btnLangZH").classList.toggle("active", filter === "ZH");
-  renderAll();
-}
-
-function stepLesson(dir) {
-  const list = getFilteredLessons();
-  if (!list.length) return;
-  state.currentIndex = (state.currentIndex + dir + list.length) % list.length;
-  renderAll();
-}
-
-function renderAll() {
-  const t = I18N[state.uiLang];
-
-  const roleBadge = document.getElementById("uiRoleBadge");
-  roleBadge.textContent = state.isAdmin ? t.roleAdmin : t.roleUser;
-  roleBadge.classList.toggle("admin", state.isAdmin);
-
-  document.getElementById("adminBanner").style.display = state.isAdmin ? "flex" : "none";
-  document.getElementById("btnAdminPanel").style.display = state.isAdmin ? "inline-flex" : "none";
-  document.getElementById("btnAdminLogin").style.display = state.isAdmin ? "none" : "inline-flex";
-  document.getElementById("adminSection").style.display = (state.isAdmin && state.showAdminPanel) ? "block" : "none";
-  document.getElementById("mainContainer").classList.toggle("wide", state.isAdmin && state.showAdminPanel);
-  document.getElementById("linkOpenSheet").href = APP_CONFIG.GOOGLE_SHEET_EDIT_URL;
-  document.getElementById("btnFastForward").style.display = state.isAdmin ? "inline-flex" : "none";
-
-  const baseUrl = window.location.origin + window.location.pathname;
-  document.getElementById("urlStudentBox").textContent = `${baseUrl}?role=user`;
-  document.getElementById("urlAdminBox").textContent = `${baseUrl}?role=admin&key=${APP_CONFIG.ADMIN_SECRET_KEY}`;
-
-  document.getElementById("uiLessonStreak").textContent = `🔥 ${state.lessonStreak}`;
-  document.getElementById("lblLessonStreak").textContent = t.lessonStreak;
-  document.getElementById("uiDayStreak").textContent = state.dayStreak;
-  document.getElementById("lblDayStreak").textContent = t.dayStreak;
-  document.getElementById("uiTotalXP").textContent = state.totalXP;
-  document.getElementById("lblTotalXP").textContent = t.totalXP;
-  document.getElementById("uiDoneCount").textContent = state.completedIds.length;
-  document.getElementById("lblDoneCount").textContent = t.doneCount;
-  document.getElementById("uiUserEmail").textContent = state.email;
-  document.getElementById("btnSwitchUser").textContent = t.switchUser;
-  document.getElementById("btnWatchNow").textContent = t.watchNow;
-  document.getElementById("btnPrev").textContent = t.prev;
-  document.getElementById("btnNext").textContent = t.next;
-
-  const progressInFive = state.lessonStreak % 5;
-  let dotsHtml = "";
-  for (let i = 1; i <= 5; i++) {
-    const filled = (progressInFive === 0 && state.lessonStreak > 0) || i <= progressInFive;
-    dotsHtml += `<div class="dot ${filled ? 'filled' : ''}"></div>`;
-  }
-  document.getElementById("streakDots").innerHTML = dotsHtml;
-
-  const list = getFilteredLessons();
-  if (!list.length) return;
-  const item = list[state.currentIndex] || list[0];
-  const isDone = state.completedIds.includes(item.id);
-
-  document.getElementById("cardBadges").innerHTML = `
-    <span class="badge ${item.lang === 'EN' ? 'lang-en' : 'lang-zh'}">${item.lang === 'EN' ? '🇬🇧 English' : '🇨🇳 中文'}</span>
-    <span class="badge">⚡ +${item.xp} XP</span>
-    <span class="badge">⏱ ${item.reqSec}s</span>
-    ${isDone ? '<span class="badge" style="background:#DCFCE7;color:#166534">✅ Done</span>' : ''}
-  `;
-  document.getElementById("cardTitle").textContent = state.uiLang === "EN" ? item.titleEn : item.titleVi;
-  document.getElementById("cardCounter").textContent = `${state.currentIndex + 1} / ${list.length}`;
-
-  let metaHtml = "";
-  DEFAULT_META_CONFIG.forEach(cfg => {
-    if (cfg.active !== "TRUE") return;
-    const val = item.raw[cfg.field_key];
-    if (!val) return;
-    const lbl = state.uiLang === "EN" ? cfg.label_en : cfg.label_vi;
-    if (cfg.display_type === "badge") {
-      metaHtml += `<div style="margin-bottom:8px"><span class="badge">${lbl}: ${val}</span></div>`;
-    } else {
-      metaHtml += `<div class="callout"><strong>${lbl}:</strong> ${val}</div>`;
-    }
-  });
-  document.getElementById("cardDynamicMeta").innerHTML = metaHtml;
-
-  if (state.isAdmin) {
-    document.getElementById("sheetTable").innerHTML = `
-      <tr><th>ID</th><th>Lang</th><th>Tiêu đề</th><th>YouTube ID</th><th>Thời lượng</th><th>XP</th></tr>
-      ${state.lessons.map(l => `
-        <tr>
-          <td>${l.id}</td><td>${l.lang}</td>
-          <td>${state.uiLang === 'EN' ? l.titleEn : l.titleVi}</td>
-          <td><code>${l.youtubeId}</code></td><td>${l.reqSec}s</td><td>+${l.xp}</td>
-        </tr>
-      `).join("")}
-    `;
-
-    document.getElementById("logsTable").innerHTML = `
-      <tr><th>Thời gian</th><th>Email Học viên</th><th>Mã bài</th><th>Đã xem</th><th>Điểm XP</th><th>Chuỗi bài</th></tr>
-      ${state.studentLogs.map(r => `
-        <tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td></tr>
-      `).join("")}
-    `;
-  }
-}
-
-// ============================================================================
-// 6. TRÌNH PHÁT YOUTUBE, ĐẾM GIÂY & KIỂM TRA QUIZ
-// ============================================================================
-function openCurrentLesson() {
-  const list = getFilteredLessons();
-  const item = list[state.currentIndex];
-  if (!item) return;
-
-  state.watchedSec = 0;
-  state.quizPassed = !item.quizVi;
-  document.getElementById("modalTitle").textContent = state.uiLang === "EN" ? item.titleEn : item.titleVi;
-  document.getElementById("videoContainer").innerHTML = `
-    <iframe src="https://www.youtube.com/embed/${item.youtubeId}?autoplay=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-  `;
-
-  const qText = state.uiLang === "EN" ? item.quizEn : item.quizVi;
-  if (qText) {
-    document.getElementById("quizContainer").innerHTML = `
-      <div style="font-weight:800;margin-bottom:6px">❓ ${qText}</div>
-      ${item.options.map((opt, idx) => `
-        <button class="quiz-opt" onclick="selectQuizOption(this, ${idx}, ${item.correctIdx})">${opt}</button>
-      `).join("")}
-    `;
-  } else {
-    document.getElementById("quizContainer").innerHTML = "";
-  }
-
-  document.getElementById("videoModal").classList.add("open");
-  clearInterval(state.watchTimer);
-  state.watchTimer = setInterval(() => {
-    state.watchedSec++;
-    updateModalButton(item);
-  }, 1000);
-  updateModalButton(item);
-}
-
-function selectQuizOption(btn, idx, correctIdx) {
-  document.querySelectorAll(".quiz-opt").forEach(el => el.classList.remove("correct", "wrong"));
-  if (idx === correctIdx) {
-    btn.classList.add("correct");
-    state.quizPassed = true;
-  } else {
-    btn.classList.add("wrong");
-    state.quizPassed = false;
-  }
-  updateModalButton(getFilteredLessons()[state.currentIndex]);
-}
-
-function fastForwardDemo() {
-  if (!state.isAdmin) return;
-  const item = getFilteredLessons()[state.currentIndex];
-  if (!item) return;
-  state.watchedSec = Math.max(state.watchedSec, item.reqSec);
-  updateModalButton(item);
-}
-
-function updateModalButton(item) {
-  const t = I18N[state.uiLang];
-  document.getElementById("timerText").textContent = `${t.watched}: ${state.watchedSec} / ${item.reqSec}s`;
-  const ready = state.watchedSec >= item.reqSec && state.quizPassed;
-  const btn = document.getElementById("btnClaimXP");
-  btn.disabled = !ready;
-  btn.textContent = ready ? t.claimBtn : t.lockedBtn;
-}
-
-async function completeLesson() {
-  const item = getFilteredLessons()[state.currentIndex];
-  if (!item) return;
-  clearInterval(state.watchTimer);
-
-  state.lessonStreak += 1;
-  const bonus = (state.lessonStreak % 5 === 0) ? 15 : 0;
-  const earned = item.xp + bonus;
-  state.totalXP += earned;
-  if (!state.completedIds.includes(item.id)) state.completedIds.push(item.id);
-
-  localStorage.setItem("lt_lesson_streak", state.lessonStreak);
-  localStorage.setItem("lt_total_xp", state.totalXP);
-  localStorage.setItem("lt_done_ids", JSON.stringify(state.completedIds));
-
-  sendScoreToSheet(state.email, item.id, state.watchedSec, earned, state.lessonStreak);
-  closeModal();
-  stepLesson(1);
-}
-
-function closeModal() {
-  clearInterval(state.watchTimer);
-  document.getElementById("videoContainer").innerHTML = "";
-  document.getElementById("videoModal").classList.remove("open");
-}
-
 function changeUser() {
   const next = prompt("Nhập email học viên:", state.email);
   if (next && next.trim()) {
@@ -907,7 +1249,7 @@ async function syncAllFromSheet() {
   const remoteLessons = await fetchLessonsFromSheet();
   await fetchAdminLogsFromSheet();
   if (remoteLessons) {
-    state.lessons = remoteLessons.map(normalizeSafeLesson).filter(l => l.active);
+    state.lessons = markDuplicateYoutubeLessons(remoteLessons.map(normalizeSafeLesson).filter(l => l.active));
     statusEl.textContent = `✅ Đã tải ${state.lessons.length} bài học từ Google Sheet!`;
     renderAll();
   } else {
@@ -930,7 +1272,7 @@ cardEl.addEventListener("touchend", e => {
 
 fetchLessonsFromSheet().then(rows => {
   if (rows) {
-    state.lessons = rows.map(normalizeSafeLesson).filter(l => l.active);
+    state.lessons = markDuplicateYoutubeLessons(rows.map(normalizeSafeLesson).filter(l => l.active));
     renderAll();
   }
 });
