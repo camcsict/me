@@ -723,6 +723,46 @@
 
     <!-- ================= 10. ROCK-SOLID VANILLA JS ENGINE ================= -->
     <script>
+            const APPS_SCRIPT_URL = "https://docs.google.com/spreadsheets/d/1-Nhz3AbBIuNg-IrQ_X_LN3c4O4edSz04lPpvRhWbeJ8/edit?usp=sharing";
+
+            // 1. Hàm tự động tải danh sách bài học từ trang DanhSachBaiHoc khi mở app
+            async function fetchLessonsFromSheet() {
+              try {
+                const response = await fetch(APPS_SCRIPT_URL);
+                const data = await response.json();
+                if (data && Array.isArray(data.lessons) && data.lessons.length > 0) {
+                  return data.lessons;
+                }
+              } catch (error) {
+                console.warn("Đang dùng dữ liệu dự phòng trên máy:", error);
+              }
+              return null;
+            }
+            
+            // 2. Hàm tự động ghi điểm và Streak vào trang LichSuDiem khi học xong 1 bài
+            async function sendScoreToSheet(userEmail, lessonId, watchedSec, xpEarned, lessonStreak) {
+              if (!APPS_SCRIPT_URL.startsWith("https://script.google.com")) return;
+            
+              const payload = {
+                email: userEmail,
+                lessonId: lessonId,
+                watchedSec: watchedSec,
+                xpEarned: xpEarned,
+                lessonStreak: lessonStreak
+              };
+            
+              try {
+                await fetch(APPS_SCRIPT_URL, {
+                  method: "POST",
+                  mode: "no-cors",
+                  headers: { "Content-Type": "text/plain;charset=utf-8" },
+                  body: JSON.stringify(payload)
+                });
+              } catch (error) {
+                console.warn("Lưu lịch sử điểm thất bại:", error);
+              }
+            }
+        
         /* -------------------------------------------------------------------------
            1. EXTENSIBLE 5-SHEET DEFAULT DATABASE
            ------------------------------------------------------------------------- */
